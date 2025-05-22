@@ -3,6 +3,8 @@
 
 A simple and scalable k3s implementation on AWS EC2 using Terraform.
 
+The nodes are deployed on private subnets.
+
 ## Requirements
 
 ### AWS Load Balancer Controller
@@ -35,11 +37,10 @@ tags = {
 module "aws-k3s" {
   source = "tmpjg/k3s/aws"
   version = "~> 1.0.0"
-
-  name                      = "<NAME>" # ${name}-k3s-master ${name}-k3s-node
-  key_pair_name             = "sandbox"
-  subnets_public_ids        = [aws_subnet.public["1a"].id,aws_subnet.public["1b"].id]
-  subnets_private_ids       = [aws_subnet.private["1a"].id,aws_subnet.private["1b"].id]
+  name                      = "<CLUSTER_NAME>" # ${name}-k3s-master ${name}-k3s-node
+  key_pair_name             = "<SSH_KEY_NAME>"
+  subnets_public_ids        = [<AWS_SUBNET_PUBLIC_ID_1>,<AWS_SUBNET_PUBLIC_ID_2>]
+  subnets_private_ids       = [<AWS_SUBNET_PRIVATE_ID_1>,<AWS_SUBNET_PRIVATE_ID_2>]
   master_instance_type      = "t3a.small"
   master_volume_size        = "10"
   master_ip                 = "33.0.11.33"
@@ -51,13 +52,13 @@ module "aws-k3s" {
     "min_size"         = "1",
     "max_size"         = "2"
   }
-  vpc_id                    = aws_vpc.main.id
-  k3s_token                 = <CHANGE>
-  k3s_version               = "v1.28.4+k3s1" # https://github.com/k3s-io/k3s/releases
-  tags_additional           = {
-    "tag_1" = "value1"
-    "tag_2" = "value2"
-  }
+  vpc_id                    = "<AWS_VPC_ID>"
+  k3s_token                 = "<RANDOM_TOKEN>"
+  k3s_version               = "<K3S_VERSION>" 
+  #tags_additional           = {
+  #  "tag_1" = "value1"
+  #  "tag_2" = "value2"
+  #}
   #k3s_iam_policies_extra_arns = [""]
   #suspended_processes_autoscalling = ["Launch", "Terminate", "HealthCheck", "ReplaceUnhealthy", "AZRebalance", "AlarmNotification", "ScheduledActions", "AddToLoadBalancer", "InstanceRefresh"]
 }
@@ -73,8 +74,8 @@ module "aws-k3s" {
 
 | Key                          | Example                                                                 | Description |
 |------------------------------|-------------------------------------------------------------------------|-------------|
-| `name`                       | "cluster-testing"                                                       | Cluster name (and prefix) |
-| `key_pair_name`              | "dev-key-ssh"                                                           | AWS SSH key name used to access instances |
+| `name`                       | "example_name"                                                          | Cluster name (and prefix) |
+| `key_pair_name`              | "ssh_key_name"                                                          | AWS SSH key name used to access instances |
 | `master_instance_type`       | "t3a.micro"                                                             | Master instance type |
 | `master_volume_size`         | "10"                                                                    | Master volume size (GB) |
 | `master_ip`                  | "33.0.11.33"                                                            | Master IP (uses the first subnet from `subnets_private_ids`) |
@@ -85,7 +86,7 @@ module "aws-k3s" {
 | `nodes_volume_size`          | "20"                                                                    | Node volume size (GB) |
 | `nodes_autoscaling`          | `{ desired_capacity" = "1", "min_size" = "1", "max_size" = "2" }`       | Node autoscaling configuration |
 | `vpc_id`                     | "vpc-01234567890abcdef"                                                 | Cluster VPC ID |
-| `k3s_token`                  | "Ex4mPL3"                                                               | Internal token used by k3s to connect nodes with the master |
+| `k3s_token`                  | "change_me_example_token"                                               | Internal token used by k3s to connect nodes with the master |
 | `k3s_version`                | "v1.27.5+k3s1"                                                          | k3s version to use ([releases](https://github.com/k3s-io/k3s/releases)) |
 | `tags_additional`            | {env=test, name=app, example=value}                                     | Additional tags for all resources (map) |
 | `k3s_iam_policy_extra`       | data.template_file.k3s_iam_policy_extra.rendered                        | JSON with extra IAM policy for the cluster |
