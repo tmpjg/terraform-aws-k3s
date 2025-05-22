@@ -13,7 +13,7 @@ For the `aws_load_balancer_controller` to work correctly, subnets must be tagged
 
 ```hcl
 tags = {
-    "Name" = "${var.environment}-${var.name}-public-${each.key}"
+    "Name" = "subnet-public"
     "kubernetes.io/cluster/<CLUSTER_NAME>" = "shared" # tag elb eks
     "kubernetes.io/role/elb" = "1" # tag elb eks
 }
@@ -23,7 +23,7 @@ tags = {
 
 ```hcl
 tags = {
-    "Name" = "${var.environment}-${var.name}-private-${each.key}"
+    "Name" = "subnet-private"
     "kubernetes.io/cluster/<CLUSTER_NAME>" = "shared" # tag elb eks
     "kubernetes.io/role/internal-elb" = "1" # tag elb eks
 }
@@ -32,9 +32,9 @@ tags = {
 ## Usage
 
 ```hcl
-module "aws-k3s-<name>" {
+module "aws-k3s" {
   source = "tmpjg/k3s/aws"
-  version = ""~> 1.0.0"
+  version = "~> 1.0.0"
 
   name                      = "${var.environment}-${var.name}" # ${name}-k3s-master ${name}-k3s-node
   key_pair_name             = "sandbox"
