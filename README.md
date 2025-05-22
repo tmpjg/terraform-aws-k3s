@@ -36,7 +36,7 @@ module "aws-k3s" {
   source = "tmpjg/k3s/aws"
   version = "~> 1.0.0"
 
-  name                      = "${var.environment}-${var.name}" # ${name}-k3s-master ${name}-k3s-node
+  name                      = "<NAME>" # ${name}-k3s-master ${name}-k3s-node
   key_pair_name             = "sandbox"
   subnets_public_ids        = [aws_subnet.public["1a"].id,aws_subnet.public["1b"].id]
   subnets_private_ids       = [aws_subnet.private["1a"].id,aws_subnet.private["1b"].id]
@@ -73,7 +73,7 @@ module "aws-k3s" {
 
 | Key                          | Example                                                                 | Description |
 |------------------------------|-------------------------------------------------------------------------|-------------|
-| `name`                       | "${var.environment}-${var.name}"                                        | Cluster name (and prefix) |
+| `name`                       | "cluster-testing"                                                       | Cluster name (and prefix) |
 | `key_pair_name`              | "dev-key-ssh"                                                           | AWS SSH key name used to access instances |
 | `master_instance_type`       | "t3a.micro"                                                             | Master instance type |
 | `master_volume_size`         | "10"                                                                    | Master volume size (GB) |
