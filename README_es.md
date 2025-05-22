@@ -32,8 +32,8 @@ tags = {
 
 ```hcl
 module "aws-k3s-<nombre>" {
-  source = "<repo_url>"
-  version = "<version>"
+  source = "tmpjg/k3s/aws"
+  version = ""~> 1.0.0"
 
   name                      = "${var.environment}-${var.name}" # ${name}-k3s-master ${name}-k3s-node
   key_pair_name             = "sandbox"
